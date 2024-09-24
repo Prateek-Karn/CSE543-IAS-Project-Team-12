@@ -3,6 +3,7 @@ channels:
   - pytorch
   - nvidia
   - defaults
+  - conda-forge
 dependencies:
   - asttokens=2.0.5=pyhd3eb1b0_0
   - blas=1.0=mkl

@@ -32,6 +32,3 @@ jobs:
       run: |
         conda install pytest
         pytest
-    - name: Get pytorch
-      run: |
-        conda install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia

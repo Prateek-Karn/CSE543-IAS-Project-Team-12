@@ -1,9 +1,9 @@
 from PIL import Image, ImageFilter, ImageDraw
 import numpy as np
 import random
-import os
+#removed the import os module here cause i no longer need to change the directory. I have everything here.
 
-os.chdir("C:\\Users\\soumy\\OneDrive\\Desktop\\CSE543-IAS-Project-Team-12\\Noise_Generator")
+#os.chdir("C:\\Users\\soumy\\OneDrive\\Desktop\\CSE543-IAS-Project-Team-12\\Noise_Generator")
 
 def add_noise(image_path, output_path, noise_type="gaussian", mean=0, var=2000, blur_section=False, num_lines=7): 
     '''The third try for the noise_generator function. This time we needed to add random lines with blur and salt and pepper.
@@ -55,6 +55,7 @@ def add_noise(image_path, output_path, noise_type="gaussian", mean=0, var=2000, 
     
     print(f"Noise, random lines, circles, triangles, and blur applied. Saved to {output_path}")
 
-input_image = "user_drawn_pencil.png" 
-output_image = "noisy_pencil_experiment1.png"  
-add_noise(input_image, output_image, noise_type="gaussian", mean=0, var=2000, blur_section=True, num_lines=7)
+#input_image = "user_drawn_pencil.png" 
+#output_image = "noisy_pencil_experiment1.png"  
+#add_noise(input_image, output_image, noise_type="gaussian", mean=0, var=2000, blur_section=True, num_lines=7)
+#UNCOMMENT THE ABOVE LINES TO SEE THE THE BASIC FUNCTIONALITY

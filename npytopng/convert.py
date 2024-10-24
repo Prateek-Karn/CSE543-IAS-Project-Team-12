@@ -3,6 +3,10 @@ import numpy as np
 import os
 from tqdm import tqdm  # For progress bar
 
+
+#Download npy files from this link:https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap;tab=objects?prefix=&forceOnObjectsSortingFiltering=false
+
+
 def extract_and_save_arrays(input_npy_path, output_folder, max_samples=None):
 
     # Load the NPY file

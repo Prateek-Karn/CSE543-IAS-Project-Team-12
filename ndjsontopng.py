@@ -49,10 +49,7 @@ def process_ndjson(file_path, target_size=(512, 512), max_samples=1000, sharpnes
         img = enhancer.enhance(sharpness_factor)
 
         if np.array(img).sum() < (img_width * img_height * 255):
-            img.save(f'C:/Users/vibhu/Downloads/output_images/reconstructed_image_{key_id}.png')
+            img.save(f'ndjsontopng/reconstructed_image_{key_id}.png')
             count += 1
 
     print("Reconstructed images saved.")
-
-ndjson_file_path = "C:/Users/vibhu/Downloads/full_raw_axe.ndjson"  # Replace with your ndjson file path
-process_ndjson(ndjson_file_path)

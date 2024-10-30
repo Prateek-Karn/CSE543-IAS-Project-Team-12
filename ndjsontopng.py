@@ -2,7 +2,8 @@ import ndjson
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance
 
-def process_ndjson(file_path, target_size=(512, 512), max_samples=1000, sharpness_factor=2.0):
+
+def process_ndjson(file_path, target_size=(1024, 1024), max_samples=1000, sharpness_factor=2.0):
     with open(file_path, 'r') as f:
         data = ndjson.load(f)
 
@@ -41,18 +42,20 @@ def process_ndjson(file_path, target_size=(512, 512), max_samples=1000, sharpnes
                 scaled_y = [(y - min_y) for y in y_coords]
                 points = list(zip(scaled_x, scaled_y))
                 if points:
-                    draw.line(points, fill=0, width=2)
+                    draw.line(points, fill=0, width=1)
 
-        img = img.resize(target_size, Image.LANCZOS)
+        if img.size != target_size:
+            img = img.resize(target_size, Image.LANCZOS)
 
+        #tryin to enhance the sharpness
         enhancer = ImageEnhance.Sharpness(img)
         img = enhancer.enhance(sharpness_factor)
 
         if np.array(img).sum() < (img_width * img_height * 255):
-            img.save(f'C:/Users/vibhu/Downloads/output_images/reconstructed_image_{key_id}.png')
+            img.save(f'saved_new_image.png')
             count += 1
 
     print("Reconstructed images saved.")
 
-ndjson_file_path = "C:/Users/vibhu/Downloads/full_raw_axe.ndjson"  # Replace with your ndjson file path
+ndjson_file_path = "C:\\Users\\soumy\\OneDrive\\Desktop\\anotherdata\\full_simplified_airplane.ndjson"  # Replace with your ndjson file path
 process_ndjson(ndjson_file_path)

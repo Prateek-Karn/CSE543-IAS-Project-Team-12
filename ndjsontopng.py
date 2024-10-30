@@ -2,8 +2,7 @@ import ndjson
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance
 
-
-def process_ndjson(file_path, target_size=(1024, 1024), max_samples=1000, sharpness_factor=2.0):
+def process_ndjson(file_path, target_size=(1024, 1024), max_samples=40, sharpness_factor=2.0):
     with open(file_path, 'r') as f:
         data = ndjson.load(f)
 
@@ -11,13 +10,13 @@ def process_ndjson(file_path, target_size=(1024, 1024), max_samples=1000, sharpn
     for record in data:
         if count >= max_samples:
             break
-            
+        # Extract the key ID and drawing data from the record, key ID used when saving the PNG.    
         key_id = record.get("key_id")
         drawing = record.get("drawing", [])
 
         min_x, min_y = float('inf'), float('inf')
         max_x, max_y = float('-inf'), float('-inf')
-
+        #Create the bounding box of the image drawing
         for stroke in drawing:
             if isinstance(stroke, list) and len(stroke) == 3:
                 x_coords = stroke[0]
@@ -31,9 +30,9 @@ def process_ndjson(file_path, target_size=(1024, 1024), max_samples=1000, sharpn
 
         img_width = int(max_x - min_x + 10)
         img_height = int(max_y - min_y + 10)
-        img = Image.new('L', (img_width, img_height), color=255)
+        img = Image.new('L', (img_width, img_height), color=255) #create a white canvas
         draw = ImageDraw.Draw(img)
-
+        #Draw the stroke on the image
         for stroke in drawing:
             if isinstance(stroke, list) and len(stroke) == 3:
                 x_coords = stroke[0]

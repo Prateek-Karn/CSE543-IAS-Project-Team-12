@@ -83,6 +83,13 @@ def calculate_similarity(image_path1, image_path2):
 
 
 # Example usage
+result = calculate_similarity("blocked_region.png", "test2.png")
+print(f"Total Pixels: {result['total_pixels']}")
+print(f"Matching Pixels: {result['matching_pixels']}")
+print(f"Pixel Similarity Percentage: {result['pixel_similarity_percentage']:.2f}%")
+print(f"Path Similarity Percentage: {result['path_similarity_percentage']:.2f}%")
+print(f"Overall Similarity Score: {result['overall_similarity_score']:.2f}%")
+
 
 # Code only for Pixel Count and not including the DFS
 

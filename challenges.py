@@ -1,7 +1,6 @@
-import sys
-import os
-import tkinter as tk
-from PIL import Image, ImageDraw, ImageTk,ImageEnhance
+#author:@Soham
+
+import cv2
 import numpy as np
 import ndjson
 import cv2
@@ -15,24 +14,29 @@ def ensure_directories_exist():
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-def erase_line_segment(image_path, square_size=50):
-    ensure_directories_exist()
-
+def erase_line_segment(image_path, square_size=6):  # Reduced square size
     image = cv2.imread(image_path)
     if image is None:
         raise ValueError("Could not load image")
     
-    original_image = image.copy()
+
+    # Print image shape to verify dimensions
+    print(f"Image shape: {image.shape}")
+    
+
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    edges = cv2.Canny(blurred, 50, 150)
+    # Reduce or remove blur for small images
+
+    blurred = cv2.GaussianBlur(gray, (3, 3), 0)  # Reduced kernel size
+    edges = cv2.Canny(blurred, 30, 100)  # Adjusted thresholds
     
-    lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=50,
-                           minLineLength=30, maxLineGap=10)
-    
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=10,  # Reduced threshold
+                           minLineLength=5,  # Reduced minimum line length
+                           maxLineGap=2)     # Reduced max gap
     if lines is None:
         raise ValueError("No lines detected in the image")
     
+
     best_point = None
     max_line_strength = 0
     
@@ -41,11 +45,13 @@ def erase_line_segment(image_path, square_size=50):
         mid_x = (x1 + x2) // 2
         mid_y = (y1 + y2) // 2
         
+        # Adjusted edge avoidance for smaller images
         if (mid_x < square_size or mid_x > image.shape[1] - square_size or 
             mid_y < square_size or mid_y > image.shape[0] - square_size):
             continue
         
-        line_strength = np.sum(edges[mid_y-5:mid_y+5, mid_x-5:mid_x+5])
+        # Reduced window size for line strength calculation
+        line_strength = np.sum(edges[mid_y-2:mid_y+2, mid_x-2:mid_x+2])
         
         if line_strength > max_line_strength:
             max_line_strength = line_strength
@@ -63,19 +69,28 @@ def erase_line_segment(image_path, square_size=50):
     image_no_border = image.copy()
     image_no_border[y:y+square_size, x:x+square_size] = [255, 255, 255]
     
-    image_with_border = image_no_border.copy()
     red_color = (0, 0, 255)
-    border_thickness = 2
-    cv2.rectangle(image_with_border, (x, y), (x + square_size, y + square_size), 
+    border_thickness = 1  # Reduced thickness for small images
+    cv2.rectangle(image, (x, y), (x + square_size, y + square_size), 
                  red_color, border_thickness)
     
     top_left = (x, y)
     bottom_right = (x + square_size, y + square_size)
     
-    base_filename = os.path.splitext(os.path.basename(image_path))[0]
+    cv2.imwrite('challenge_created.png', image)
     
-    cv2.imwrite(os.path.join('challenge_created', f'{base_filename}_no_border.png'), image_no_border)
-    cv2.imwrite(os.path.join('blockedregion_images', f'{base_filename}_blocked.png'), blocked_region)
-    
-    return image_with_border, image_no_border, blocked_region, (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
+    return image, (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
 
+image_path = "image_000272.png"
+modified_image, corners = erase_line_segment(image_path)
+print(f"Square corners coordinates:")
+print(f"Top-left corner: ({corners[0]}, {corners[1]})")
+print(f"Bottom-right corner: ({corners[2]}, {corners[3]})")
+
+
+
+display_image = cv2.resize(modified_image, (280, 280), 
+                            interpolation=cv2.INTER_NEAREST)
+cv2.imshow('Modified Image', display_image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()

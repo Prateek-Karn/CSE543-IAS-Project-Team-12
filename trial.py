@@ -1,13 +1,13 @@
-import sys
 import os
 import tkinter as tk
 from PIL import Image, ImageDraw, ImageTk
-import numpy as np
-
-sys.path.append(os.path.join(os.getcwd(), 'Noise_Generator'))
-
 import noise_generator5 as ng5
 
+def ensure_directories_exist():
+    """Create the required directory if it doesn't exist."""
+    directory = 'noisegenerated_image'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 class DrawingApp:
     def __init__(self, root, noisy_image):
@@ -25,7 +25,7 @@ class DrawingApp:
         self.drawing_tool = "pencil"
         self.canvas.bind("<B1-Motion>", self.paint)
 
-        # bascially this is going to update everytime the user draws. i.e. the user is going to draw on noise and it's going to come out without noise.
+        # basically this is going to update everytime the user draws. i.e. the user is going to draw on noise and it's going to come out without noise.
         self.image_no_noise = Image.new("RGB", (500, 500), "white")
         self.draw_no_noise = ImageDraw.Draw(self.image_no_noise)
 
@@ -38,33 +38,34 @@ class DrawingApp:
         x2, y2 = (event.x + 1), (event.y + 1)
 
         # Draw on the canvas
-        self.canvas.create_oval(x1, y1, x2, y2, fill="black", width=1)
+        self.canvas.create_oval(x1, y1, x2, y2, fill="black", width=5)
 
         # Save the stroke to the image without noise
         self.draw_no_noise.ellipse([x1, y1, x2, y2], fill="black")
 
     def save_image(self):
         # Save the user's drawing without noise
-        file_path_no_noise = "plain_user_drawing.png" #this is how our image is getting saved
+        file_path_no_noise = "plain_user_drawing.png"
         self.image_no_noise.save(file_path_no_noise)
 
-        print(f"Drawings saved as {file_path_no_noise}") # and {file_path_with_noise}") <- you can uncomment this if you want the noisy image to be saved too
+        print(f"Drawing saved as {file_path_no_noise}")
 
+def add_noise_to_drawing(input_image_path):
+    # Create the noisegenerated_image directory if it doesn't exist
+    ensure_directories_exist()
+    
+    if input_image_path is None:
+        # Original behavior: Generate a blank image
+        blank_image = Image.new("RGB", (500, 500), "white")
+        input_image_path = "blank_image.png"
+        blank_image.save(input_image_path)
+    
+    # Generate noise and save in the noisegenerated_image folder
+    base_filename = os.path.splitext(os.path.basename(input_image_path))[0]
+    noisy_image = os.path.join('noisegenerated_image', f'{base_filename}_noisy.png')
+    ng5.add_noise(input_image_path, noisy_image)
 
-#Function to add noise and then let the user draw on it
-def add_noise_to_drawing():
-    # we don't need this right now: Generate a blank image of 500x500 and apply noise
-    #blank_image = Image.new("RGB", (500, 500), "white")
-    #blank_image_path = "blank_image.png"
-    #blank_image.save(blank_image_path)
-
-    noisy_image = "noisy_background.png"
-    ng5.add_noise(image_path="image_path_here",output_path="noisy_image_path")  # Generate the noisy background
-
-    # Step 1 - Start the drawing app with the noisy background
     root = tk.Tk()
     app = DrawingApp(root, noisy_image)
     root.mainloop()
 
-
-add_noise_to_drawing()

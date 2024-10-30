@@ -56,5 +56,6 @@ def process_ndjson(file_path, target_size=(1024, 1024), max_samples=40, sharpnes
 
     print("Reconstructed images saved.")
 
-ndjson_file_path = "C:\\Users\\soumy\\OneDrive\\Desktop\\anotherdata\\full_simplified_airplane.ndjson"  # Replace with your ndjson file path
-process_ndjson(ndjson_file_path)
+#ndjson_file_path = "C:\\Users\\soumy\\OneDrive\\Desktop\\anotherdata\\full_simplified_airplane.ndjson"  # Replace with your ndjson file path
+#process_ndjson(ndjson_file_path)
+# NO NEED TO UNCOMMENT THIS BECAUSE WE ONLY NEED THE FUNCTION AND IT IS WORKING FINE.

@@ -14,7 +14,9 @@ from similarity_score import calculate_similarity
 #Converting ndjson file into png file 
 ndjson_file_path = "full_raw_axe.ndjson"
 
-process_ndjson(ndjson_file_path)
+
+process_ndjson(ndjson_file_path, max_samples=1)
+
 
 
 #Creating Challenges from the png images

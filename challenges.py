@@ -73,7 +73,7 @@ def erase_line_segment(image_path, square_size=50):
     
     return image_with_border, image_no_border, blocked_region, (top_left[0], top_left[1], bottom_right[0], bottom_right[1])
 
-image_path = "Untitled2.png"  # Your image path
+'''image_path = "Untitled2.png"  # Your image path
 modified_image_border, modified_image_no_border, blocked_region, corners = erase_line_segment(image_path)
 
 print(f"Square corners coordinates:")
@@ -85,5 +85,6 @@ cv2.imshow('Modified Image without Border', modified_image_no_border)
 cv2.imshow('Blocked Region', blocked_region)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
+'''
+#NO NEED TO UNDOC THIS BECAUSE THIS IS WORKING FINE. WE ONLY NEED THE FUNCTION.
 
